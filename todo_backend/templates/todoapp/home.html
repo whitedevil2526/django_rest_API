@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Todo App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            margin: 10px 0;
+        }
+        form {
+            margin: 20px 0;
+        }
+        button {
+            margin-right: 10px;
+        }
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <h1>Todo App</h1>
+
+    <!-- List of Todos -->
+    <h2>Todo List</h2>
+    <ul>
+        {% for todo in todos %}
+        <li>
+            <strong>{{ todo.title }}</strong> - {{ todo.description }}
+            <span>{{ todo.completed|yesno:"Completed,Not Completed" }}</span>
+            <a href="{% url 'todo_update' todo.pk %}">Edit</a>
+            <form action="{% url 'todo_delete' todo.pk %}" method="post" style="display:inline;">{% csrf_token %}
+                <button type="submit">Delete</button>
+            </form>
+        </li>
+        {% endfor %}
+    </ul>
+
+    <!-- Create or Update Todo -->
+    <h2>{% if form.instance.pk %}Update{% else %}Create{% endif %} Todo</h2>
+    <form method="post">{% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Save</button>
+    </form>
+    <a href="{% url 'todo_create' %}">Create new todo</a>
+</body>
+</html>
